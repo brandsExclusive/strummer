@@ -3,6 +3,9 @@ env:
   mocha: true
   es6: true
 
+parserOptions:
+  ecmaVersion: 2017
+
 rules:
   comma-style: [2, "last"]
   default-case: 2

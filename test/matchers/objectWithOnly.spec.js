@@ -4,6 +4,7 @@ var boolean         = require('../../lib/matchers/boolean');
 var string          = require('../../lib/matchers/string');
 var number          = require('../../lib/matchers/number');
 var optional        = require('../../lib/matchers/optional');
+var enumer          = require('../../lib/matchers/enum');
 var Matcher         = require('../../lib/matcher');
 
 describe('objectWithOnly object matcher', function() {
@@ -245,6 +246,26 @@ describe('objectWithOnly object matcher', function() {
     });
 
     schema.match('/', {name: 'works'}, constraintFunc).should.eql([]);
+  });
+
+  it('handles an invalid value via matchAsync', async function () {
+    function values () { return ['a', 'b', 'c'] }
+
+    const schema = new objectWithOnly({
+      holidayTypes: new enumer({ values })
+    });
+
+    const result = await schema.matchAsync({
+      holidayTypes: 'd'
+    });
+
+    [
+      {
+        message: 'should be a valid enum value',
+        path: 'holidayTypes',
+        value: 'd'
+      }
+    ].should.eql(result);
   });
 
 });

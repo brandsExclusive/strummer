@@ -1,5 +1,7 @@
 var enumer = require('../../lib/matchers/enum');
 
+function values () { return ['a', 'b', 'c'] }
+
 describe('enum matcher', function() {
 
   var valid = ['blue', 'red', 'green'];
@@ -71,6 +73,26 @@ describe('enum matcher', function() {
       enum: ['foo', 'bar', 'brillian', 'kiddkai'],
       type: 'string'
     });
+  });
+
+  it('handles a valid async valule', async function () {
+    const schema = new enumer({ values });
+    const result = await schema.matchAsync('b');
+
+    [].should.eql(result);
+  });
+
+  it('handles an invalid async value', async function () {
+    const schema = new enumer({ values });
+    const result = await schema.matchAsync('d');
+
+    [
+      {
+        message: 'should be a valid enum value',
+        path: '',
+        value: 'd'
+      }
+    ].should.eql(result);
   });
 
 });
